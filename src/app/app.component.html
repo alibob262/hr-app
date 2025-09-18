@@ -1,0 +1,61 @@
+<div class="app-container">
+  <!-- Header with Nav -->
+  <header class="header">
+    <div class="container">
+      <a routerLink="/dashboard" class="logo-link">
+        <img src="assets/images/Logo_CCC.png" alt="App Logo" class="logo-img" />
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="desktop-nav">
+        <a *ngIf="isLoggedIn" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <a *ngIf="isLoggedIn" routerLink="/employees" routerLinkActive="active">Employee Portal</a>
+        <span *ngIf="fullName$ | async as fullName">Logged in as: {{ fullName }}</span>
+
+        <div class="auth-buttons" *ngIf="!isLoggedIn">
+          <a routerLink="/login" class="btn btn-outline">Login</a>
+          <a routerLink="/signup" class="btn btn-primary">Sign Up</a>
+        </div>
+
+        <button *ngIf="isLoggedIn" (click)="logout()" class="btn btn-danger">
+          Logout
+        </button>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button class="burger-menu" (click)="toggleMenu()" aria-label="Menu">
+        <span [class.active]="menuOpen"></span>
+        <span [class.active]="menuOpen"></span>
+        <span [class.active]="menuOpen"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Nav (hidden by default) -->
+  <div class="mobile-nav" [class.active]="menuOpen">
+    <ng-container *ngIf="isLoggedIn; else mobileGuest">
+      <a routerLink="/dashboard" (click)="toggleMenu()" routerLinkActive="active">Dashboard</a>
+      <a *ngIf="isAdmin" routerLink="/employees" (click)="toggleMenu()" routerLinkActive="active">Employee Portal</a>
+      <span *ngIf="fullName$ | async as fullName">Logged in as: {{ fullName }}</span>
+      <button (click)="logout(); toggleMenu()" class="btn btn-logout">Logout</button>
+    </ng-container>
+    <ng-template #mobileGuest>
+      <a routerLink="/login" (click)="toggleMenu()">Login</a>
+      <a routerLink="/signup" (click)="toggleMenu()">Sign Up</a>
+    </ng-template>
+  </div>
+
+  <!-- Main Content  -->
+  <main class="main-content">
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2025 Your HR App. All rights reserved.</p>
+    </div>
+  </footer>
+</div>

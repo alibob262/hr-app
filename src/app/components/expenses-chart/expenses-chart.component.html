@@ -1,0 +1,20 @@
+<div class="chart-container">
+  <ngx-charts-bar-vertical
+    [view]="view"
+    [scheme]="colorScheme"
+    [results]="expenseData$ | async"
+    [gradient]="gradient"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [legend]="showLegend"
+    [legendPosition]="legendPosition"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [animations]="true"
+    [barPadding]="barPadding">
+  </ngx-charts-bar-vertical>
+
+<!-- <pre>{{ (expenseData$ | async) | json }}</pre> -->
+</div>

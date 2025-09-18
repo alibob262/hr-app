@@ -1,0 +1,42 @@
+<div class="employee-list-container">
+  <div class="card">
+    <div class="card-header">
+      <div class="header-content">
+        <h2 class="portal-title">Employee Portal</h2>
+      </div>
+    </div>
+
+    <div class="card-content">
+      <div class="table-container">
+        <table class="employee-table">
+          <thead>
+            <tr class="header-row">
+              <th class="header-cell name-header">Name</th>
+              <th class="header-cell email-header">Email</th>
+              <th class="header-cell dept-header">Department</th>
+              <th class="header-cell actions-header">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let employee of employees" class="row-content">
+              <td class="cell-content">{{ employee.name }}</td>
+              <td class="cell-content">{{ employee.email }}</td>
+              <td class="cell-content">{{ getDepartmentName(employee.departmentId) }}</td>
+              <td class="cell-content">
+                <button
+                  *ngIf="canEdit(employee.id)"
+                  class="action-btn edit-btn"
+                  [routerLink]="['/employees', employee.id]"
+                  title="Edit Profile"
+                  aria-label="Edit profile"
+                >
+                  ✏️
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

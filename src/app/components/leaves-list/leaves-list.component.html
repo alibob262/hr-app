@@ -1,0 +1,108 @@
+<div class="card">
+  <div class="card-header">
+    <h2>{{ isAdminView ? 'All Leave Requests' : 'My Leave Requests' }}</h2>
+    <button *ngIf="!isAdminView" 
+              mat-raised-button 
+              color="primary" 
+              (click)="openLeaveSubmissionModal()"
+              class="new-leave-btn">
+        Submit New Leave
+      </button>
+  </div>
+
+  <div class="card-content">
+    <div class="filter-controls">
+      <mat-form-field appearance="outline" *ngIf="isAdminView">
+        <mat-label>Employee</mat-label>
+        <mat-select [(ngModel)]="selectedEmployee" (selectionChange)="applyFilters()">
+          <mat-option [value]="null">All Employees</mat-option>
+          <mat-option *ngFor="let employee of employees" [value]="employee.id">
+            {{ employee.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>From Date</mat-label>
+        <input matInput [matDatepicker]="fromPicker" [(ngModel)]="fromDateFilter">
+        <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+        <mat-datepicker #fromPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>To Date</mat-label>
+        <input matInput [matDatepicker]="toPicker" [(ngModel)]="toDateFilter">
+        <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+        <mat-datepicker #toPicker></mat-datepicker>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="applyFilters()">Apply</button>
+      <button mat-button (click)="clearFilters()">Clear</button>
+    </div>
+
+    <div class="table-container" *ngIf="!loading; else loadingIndicator">
+      <table class="leaves-table">
+        <thead>
+          <tr class="header-row">
+            <th class="table-header" *ngIf="isAdminView">Employee</th>
+            <th class="table-header">Leave Type</th>
+            <th class="table-header">Date Range</th>
+            <th class="table-header">Days</th>
+            <th class="table-header">Status</th>
+            <th class="table-header">Submitted On</th>
+            <th class="table-header" *ngIf="isAdminView">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let leave of paginatedLeaves" class="data-row">
+            <td *ngIf="isAdminView">{{ leave.employeeName }}</td>
+            <td>{{ leave.leaveTypeName }}</td>
+            <td>{{ leave.from | date }} - {{ leave.to | date }}</td>
+            <td>{{ leave.numberOfDays }}</td>
+            <td>
+              <span [class]="'status-badge ' + getStatusColor(leave.status)">
+                {{ leave.status | titlecase }}
+              </span>
+            </td>
+            <td>{{ leave.createdAt | date }}</td>
+            <td *ngIf="isAdminView" class="actions-cell">
+              <button mat-icon-button color="primary" 
+        *ngIf="leave.status === 'pending'"
+        (click)="updateLeaveStatus(leave.id, 'approved')">
+  ✓
+</button>
+<button mat-icon-button color="warn" 
+        *ngIf="leave.status === 'pending'"
+        (click)="updateLeaveStatus(leave.id, 'rejected')">
+  ✕
+</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="pagination">
+        <button (click)="previousPage()" [disabled]="pageIndex === 0">Previous</button>
+        <span>Page {{ pageIndex + 1 }} of {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="pageIndex === totalPages - 1">Next</button>
+        <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+          <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+        </select>
+      </div>
+    </div>
+
+    <ng-template #loadingIndicator>
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+      </div>
+    </ng-template>
+
+    <div *ngIf="isAdminView" class="chart-button">
+      <button mat-raised-button color="accent" (click)="toggleChart()">
+        {{ showChart ? 'Hide Chart' : 'View Chart' }}
+      </button>
+    </div>
+
+    <app-leaves-chart *ngIf="isAdminView && showChart"></app-leaves-chart>
+  </div>
+</div>

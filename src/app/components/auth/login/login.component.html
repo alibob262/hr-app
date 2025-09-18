@@ -1,0 +1,17 @@
+<div class="auth-container">
+  <h2>Login</h2>
+  <form [formGroup]="form" (ngSubmit)="login()">
+    <label>Email</label>
+    <input type="email" formControlName="email" />
+    <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched">Invalid email</div>
+
+    <label>Password</label>
+    <input type="password" formControlName="password" />
+    <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched">Password is required</div>
+
+    <button type="submit" [disabled]="form.invalid">Login</button>
+    <div *ngIf="error" class="error">{{ error }}</div>
+  </form>
+
+  <p>Don't have an account? <a routerLink="/signup">Sign up</a></p>
+</div>
