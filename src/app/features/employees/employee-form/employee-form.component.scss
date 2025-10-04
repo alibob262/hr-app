@@ -1,0 +1,100 @@
+@use '@angular/material' as mat;
+
+.employee-form-card {
+  max-width: 800px;
+  margin: var(--spacing-xl) auto;
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+
+  .form-title {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .form-field {
+    width: 100%;
+    margin-bottom: var(--spacing-lg);
+
+    mat-label {
+      color: var(--gray-600);
+    }
+
+    textarea {
+      min-height: 100px;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+
+    .cancel-btn {
+      border-color: var(--gray-400);
+      color: var(--gray-700);
+    }
+
+    .submit-btn {
+      font-weight: 500;
+    }
+  }
+
+  @media (max-width: 768px) {
+    margin: var(--spacing-md);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+
+    .form-title {
+      font-size: 1.25rem;
+    }
+
+    .form-field {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .form-actions {
+      flex-direction: row;
+      justify-content: space-between;
+      gap: var(--spacing-md);
+
+      button {
+        flex: 1;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    margin: var(--spacing-sm);
+    padding: var(--spacing-md);
+    box-shadow: none;
+    border-radius: 0;
+    border: 1px solid var(--gray-200);
+
+    .form-actions {
+      flex-direction: column;
+    }
+  }
+}
+
+.success-snackbar {
+  background-color: #4caf50;
+  color: white;
+  font-weight: 500;
+
+  .mat-simple-snackbar-action {
+    color: white;
+  }
+}
+
+@media (max-width: 600px) {
+  .success-snackbar {
+    margin-top: 56px; 
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+  }
+}

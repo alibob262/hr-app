@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>Submit Leave Request</h2>
+<hr>
+
+<mat-dialog-content>
+  <form [formGroup]="leaveForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Leave Type</mat-label>
+      <mat-select formControlName="leaveTypeId" required>
+        <mat-option *ngFor="let type of leaveTypes" [value]="type.id">
+          {{ type.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="leaveForm.get('leaveTypeId')?.invalid">Required</mat-error>
+    </mat-form-field>
+
+    <div class="date-range">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>From Date</mat-label>
+        <input matInput [matDatepicker]="fromPicker" formControlName="from" required>
+        <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+        <mat-datepicker #fromPicker></mat-datepicker>
+        <mat-error *ngIf="leaveForm.get('from')?.invalid">Required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>To Date</mat-label>
+        <input matInput [matDatepicker]="toPicker" formControlName="to" required>
+        <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+        <mat-datepicker #toPicker></mat-datepicker>
+        <mat-error *ngIf="leaveForm.get('to')?.invalid">Required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="days-display" *ngIf="leaveForm.get('from')?.value && leaveForm.get('to')?.value">
+      <strong>Business Days:</strong> {{ calculateDaysDisplay() }}
+    </div>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Notes (Optional)</mat-label>
+      <textarea matInput formControlName="note" rows="3"></textarea>
+      <mat-hint align="end">{{ leaveForm.get('note')?.value?.length || 0 }}/500</mat-hint>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading">Cancel</button>
+  <button mat-raised-button color="primary"
+          (click)="onSubmit()"
+          [disabled]="leaveForm.invalid || loading">
+    {{ loading ? 'Submitting...' : 'Submit' }}
+  </button>
+</mat-dialog-actions>

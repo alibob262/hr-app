@@ -1,0 +1,107 @@
+<div class="card">
+  <div class="card-header">
+    <div class="header-content">
+      <h2>{{ isAdminView ? 'All Expense Claims' : 'My Expense Claims' }}</h2>
+      <button *ngIf="!isAdminView" mat-raised-button color="primary" class="new-expense-btn" (click)="openExpenseModal()">
+        Submit New Expense
+      </button>
+    </div>
+  </div>
+
+  <div class="card-content">
+    <div class="filter-controls">
+      <mat-form-field appearance="outline" *ngIf="isAdminView">
+        <mat-label>Employee</mat-label>
+        <mat-select [(ngModel)]="selectedEmployee" (selectionChange)="applyFilters()">
+          <mat-option [value]="null">All Employees</mat-option>
+          <mat-option *ngFor="let employee of employees" [value]="employee.id">
+            {{ employee.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>From Date</mat-label>
+        <input matInput [matDatepicker]="fromPicker" [(ngModel)]="fromDateFilter">
+        <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+        <mat-datepicker #fromPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>To Date</mat-label>
+        <input matInput [matDatepicker]="toPicker" [(ngModel)]="toDateFilter">
+        <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+        <mat-datepicker #toPicker></mat-datepicker>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="applyFilters()">Apply</button>
+      <button mat-button (click)="clearFilters()">Clear</button>
+    </div>
+
+    <div *ngIf="isAdminView" class="chart-button">
+      <button mat-raised-button color="accent" (click)="toggleChart()">
+        {{ showChart ? 'Hide Chart' : 'View Chart' }}
+      </button>
+    </div>
+
+    <div class="table-container" *ngIf="!loading; else loadingIndicator">
+      <table class="expenses-table">
+        <thead>
+          <tr class="header-row">
+            <th class="table-header" *ngIf="isAdminView">Employee</th>
+            <th class="table-header">Description</th>
+            <th class="table-header">Date</th>
+            <th class="table-header">Total</th>
+            <th class="table-header">Submitted On</th>
+            <th class="table-header">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let expense of paginatedExpenses">
+            <tr class="main-row">
+              <td *ngIf="isAdminView">{{ expense.employeeName }}</td>
+              <td>{{ expense.description }}</td>
+              <td>{{ getDate(expense.date) | date }}</td>
+              <td>{{ expense.total | currency }}</td>
+              <td>{{ getDate(expense.createdAt) | date }}</td>
+              <td>
+                <button class="toggle-details-btn" (click)="toggleDetails(expense)">
+                  {{ expense.showDetails ? '− Hide Details' : '+ Show Details' }}
+                </button>
+              </td>
+            </tr>
+            <tr class="detail-row" [class.expanded]="expense.showDetails">
+              <td [attr.colspan]="isAdminView ? 6 : 5">
+                <div class="expense-detail" *ngIf="expense.showDetails">
+                  <div *ngFor="let detail of expense.details" class="detail-item">
+                    <div><strong>Type:</strong> {{ detail.type }}</div>
+                    <div><strong>Date:</strong> {{ getDate(detail.date) | date }}</div>
+                    <div><strong>Description:</strong> {{ detail.description }}</div>
+                    <div><strong>Amount:</strong> {{ detail.total | currency }}</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+
+      <div class="pagination">
+        <button (click)="previousPage()" [disabled]="pageIndex === 0">Previous</button>
+        <span>Page {{ pageIndex + 1 }} of {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="pageIndex === totalPages - 1">Next</button>
+        <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+          <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+        </select>
+      </div>
+    </div>
+
+    <ng-template #loadingIndicator>
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+      </div>
+    </ng-template>
+
+    <app-expenses-chart *ngIf="isAdminView && showChart"></app-expenses-chart>
+  </div>
+</div>

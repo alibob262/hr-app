@@ -1,0 +1,74 @@
+<div class="auth-container">
+  <h2>Employee Sign Up</h2>
+  <form [formGroup]="form" (ngSubmit)="signup()">
+    <div class="form-group">
+      <label for="fullName">Full Name</label>
+      <input id="fullName" type="text" formControlName="fullName" placeholder="Enter your full name" />
+      <div *ngIf="form.get('fullName')?.invalid && form.get('fullName')?.touched" class="error">
+        Full name is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" placeholder="Enter your email" />
+      <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="error">
+        Please enter a valid email
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" placeholder="Enter your password" />
+      <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="error">
+        Password must be at least 6 characters
+      </div>
+      <div class="password-hint">Use at least 6 characters with a mix of letters and numbers</div>
+    </div>
+
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="Confirm your password" />
+      <div *ngIf="form.hasError('passwordMismatch') && form.get('confirmPassword')?.touched" class="error">
+        Passwords do not match
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <textarea
+        id="address"
+        formControlName="address"
+        placeholder="Enter your full address"
+        rows="3"
+      ></textarea>
+      <div *ngIf="form.get('address')?.invalid && form.get('address')?.touched" class="error">
+        Address is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="departmentId">Department</label>
+      <select id="departmentId" formControlName="departmentId" class="form-select">
+        <option value="" disabled selected>Select your department</option>
+        <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
+      </select>
+      <div *ngIf="form.get('departmentId')?.invalid && form.get('departmentId')?.touched" class="error">
+        Please select your department
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit" [disabled]="form.invalid || loading()">
+      <span *ngIf="!loading()">Create Employee Account</span>
+      <span *ngIf="loading()">
+        <span class="spinner"></span> Creating account...
+      </span>
+    </button>
+
+    <div *ngIf="error()" class="error-message">{{ error() }}</div>
+
+    <div class="auth-footer">
+      <p>Already have an account? <a routerLink="/login">Log in</a></p>
+    </div>
+  </form>
+</div>

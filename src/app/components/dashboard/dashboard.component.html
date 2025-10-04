@@ -1,0 +1,39 @@
+<div class="dashboard-container">
+  <ng-container *ngIf="role === 'admin'; else employeeView">
+    <div class="admin-header">
+      <h2>Welcome, Admin</h2>
+      <p class="admin-subtitle">You can manage employees, leaves, and expenses.</p>
+    </div>
+    <div class="admin-actions">
+      <button mat-raised-button color="primary" routerLink="/employees" class="action-button">
+        Employee Management
+      </button>
+      <button mat-raised-button color="accent" (click)="viewAllLeaves()" class="action-button">
+        Manage Leaves
+      </button>
+      <button mat-raised-button color="warn" (click)="viewAllExpenses()" class="action-button">
+        Manage Expenses
+      </button>
+    </div>
+  </ng-container>
+
+  <ng-template #employeeView>
+    <div class="employee-header">
+      <h2>Welcome, Employee</h2>
+    </div>
+    <div class="employee-actions">
+      <button mat-raised-button color="primary" (click)="openLeaveSubmission()" class="action-button">
+        Submit Leave Request
+      </button>
+      <button mat-raised-button color="accent" (click)="viewMyLeaves()" class="action-button">
+        View My Leaves
+      </button>
+      <button mat-raised-button color="primary" (click)="openExpenseSubmission()" class="action-button">
+        Submit Expense Claim
+      </button>
+      <button mat-raised-button color="accent" (click)="viewMyExpenses()" class="action-button">
+        View My Expenses
+      </button>
+    </div>
+  </ng-template>
+</div>
